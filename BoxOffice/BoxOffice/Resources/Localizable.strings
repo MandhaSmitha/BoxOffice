@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  BoxOffice
+
+  Created by Smitha Mandha on 7/8/18.
+  Copyright © 2018 SmithaReddy. All rights reserved.
+*/
+
+/** MovieList strings */
+"MovieListPage_Title" = "Movie List";
+
+/** MovieListCell strings */
+"MovieListCell_NameTitle_Text" = "Title : ";
+"MovieListCell_ReleaseDateTitle_Text" = "Release date : ";
