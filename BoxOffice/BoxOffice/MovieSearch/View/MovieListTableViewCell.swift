@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class MovieListTableViewCell: UITableViewCell {
 
@@ -36,6 +37,8 @@ class MovieListTableViewCell: UITableViewCell {
         releaseDateTitleLabel.text = NSLocalizedString("MovieListCell_ReleaseDateTitle_Text", comment: "Release date text")
         releaseDateLabel.text = viewModel?.releaseDateText
         overviewLabel.text = viewModel?.fullOverviewText
-        posterImageView.image = UIImage(named: "")
+        if let posterURL = viewModel?.posterURL {
+            posterImageView.sd_setImage(with: URL(string: posterURL), placeholderImage: nil, options: .allowInvalidSSLCertificates, completed: nil)
+        }
     }
 }

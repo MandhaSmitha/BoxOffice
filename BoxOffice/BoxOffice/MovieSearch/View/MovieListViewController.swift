@@ -44,6 +44,14 @@ class MovieListViewController: UIViewController {
                 self?.tableView.reloadData()
             }
         }
+        viewModel.showAlertClosure = { [weak self] (message) in
+            DispatchQueue.main.async {
+                let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+                let action = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+                alertController.addAction(action)
+                self?.present(alertController, animated: true, completion: nil)
+            }
+        }
     }
 }
 

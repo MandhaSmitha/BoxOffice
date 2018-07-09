@@ -8,6 +8,10 @@
 
 import UIKit
 
+struct MovieListViewModelConstants {
+    static let genericTechnicalError = "Sorry, something went wrong. Please try again"
+}
+
 class MovieListViewModel: NSObject {
     
     private var lastSearch = ""
@@ -18,6 +22,8 @@ class MovieListViewModel: NSObject {
         }
     }
     var reloadTableViewClosure: (()->())?
+    var showAlertClosure: ((String)->())?
+
     var numberOfCells: Int {
         return cellViewModels.count
     }
@@ -35,7 +41,7 @@ class MovieListViewModel: NSObject {
             if isSuccess, let response = responseData {
                 self.handleMovieResponse(responseData: response, isNewSearch: isNewSearch)
             } else {
-                //handle error
+                self.showAlertClosure?(MovieListViewModelConstants.genericTechnicalError)
             }
         })
     }
@@ -57,6 +63,7 @@ class MovieListViewModel: NSObject {
     func fetchMovie(_ movieName: String, isNewSearch: Bool, completionHandler: @escaping ((Bool, Data?, Error?)->Void)) {
         let movieEndPoint: String = "\(APIConstants.baseURL)?api_key=\(APIConstants.apiKey)&query=\(movieName)&page=\(moviesModel.pageNumber+1)"
         guard let url = URL(string: movieEndPoint) else {
+            showAlertClosure?(MovieListViewModelConstants.genericTechnicalError)
             return
         }
         let urlRequest = URLRequest(url: url)
@@ -76,7 +83,7 @@ class MovieListViewModel: NSObject {
         do {
             guard let response = try JSONSerialization.jsonObject(with: responseData, options: [])
                 as? [String: Any], let movieListResponse = response["results"] as? [[String: Any]] else {
-                    print("error trying to convert data to JSON")
+                    showAlertClosure?(MovieListViewModelConstants.genericTechnicalError)
                     return
             }
             
@@ -84,6 +91,7 @@ class MovieListViewModel: NSObject {
             parseMovieListResponse(movieListResponse)
             populateCellViewModels(movies: moviesModel.movies)
         } catch  {
+            showAlertClosure?(MovieListViewModelConstants.genericTechnicalError)
             return
         }
     }
