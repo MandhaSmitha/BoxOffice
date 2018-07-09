@@ -16,10 +16,14 @@ class MovieListTableViewCell: UITableViewCell {
     @IBOutlet weak var releaseDateLabel: UILabel!
     @IBOutlet weak var posterImageView: UIImageView!
     @IBOutlet weak var overviewLabel: UILabel!
+    var viewModel: MovieListCellViewModel? {
+        didSet {
+            setupView()
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        setupView()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -28,10 +32,10 @@ class MovieListTableViewCell: UITableViewCell {
     
     func setupView() {
         nameTitleLabel.text = NSLocalizedString("MovieListCell_NameTitle_Text", comment: "movie title text")
-        nameLabel.text = ""
+        nameLabel.text = viewModel?.nameText
         releaseDateTitleLabel.text = NSLocalizedString("MovieListCell_ReleaseDateTitle_Text", comment: "Release date text")
-        releaseDateLabel.text = ""
-        overviewLabel.text = ""
+        releaseDateLabel.text = viewModel?.releaseDateText
+        overviewLabel.text = viewModel?.fullOverviewText
         posterImageView.image = UIImage(named: "")
     }
 }

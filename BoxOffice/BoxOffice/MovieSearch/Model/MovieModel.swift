@@ -8,6 +8,15 @@
 
 import UIKit
 
-class MovieModel: NSObject {
+struct MoviesModel {
+    var movies = [MovieModel]()
+    var pageNumber = 0
+    var totalPages = 0
+}
 
+struct MovieModel {
+    var posterPath: String?
+    var name: String?
+    var releaseDate: String?
+    var fullOverview: String?
 }

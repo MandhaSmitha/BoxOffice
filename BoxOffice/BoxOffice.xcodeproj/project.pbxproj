@@ -20,6 +20,8 @@
 		2BB4E1C820F2925900334E84 /* MovieListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB4E1C720F2925900334E84 /* MovieListTableViewCell.swift */; };
 		2BB4E1CA20F2941700334E84 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2BB4E1C920F2941700334E84 /* Localizable.strings */; };
 		2BB4E1CD20F2959D00334E84 /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB4E1CC20F2959D00334E84 /* UITableViewCell+Extension.swift */; };
+		2BB4E1D220F2BEF100334E84 /* MovieListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB4E1D120F2BEF100334E84 /* MovieListCellViewModel.swift */; };
+		2BB4E1D420F2C02A00334E84 /* APIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB4E1D320F2C02A00334E84 /* APIConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +61,8 @@
 		2BB4E1C720F2925900334E84 /* MovieListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListTableViewCell.swift; sourceTree = "<group>"; };
 		2BB4E1C920F2941700334E84 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		2BB4E1CC20F2959D00334E84 /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
+		2BB4E1D120F2BEF100334E84 /* MovieListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListCellViewModel.swift; sourceTree = "<group>"; };
+		2BB4E1D320F2C02A00334E84 /* APIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				2BB4E1C320F290C300334E84 /* MovieListViewModel.swift */,
+				2BB4E1D120F2BEF100334E84 /* MovieListCellViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -195,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				2BB4E1CC20F2959D00334E84 /* UITableViewCell+Extension.swift */,
+				2BB4E1D320F2C02A00334E84 /* APIConstants.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -336,8 +342,10 @@
 				2BB4E18D20F2808200334E84 /* AppDelegate.swift in Sources */,
 				2BB4E1C620F290D600334E84 /* MovieModel.swift in Sources */,
 				2BB4E19520F2808200334E84 /* BoxOffice.xcdatamodeld in Sources */,
+				2BB4E1D420F2C02A00334E84 /* APIConstants.swift in Sources */,
 				2BB4E1C820F2925900334E84 /* MovieListTableViewCell.swift in Sources */,
 				2BB4E1C420F290C300334E84 /* MovieListViewModel.swift in Sources */,
+				2BB4E1D220F2BEF100334E84 /* MovieListCellViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
