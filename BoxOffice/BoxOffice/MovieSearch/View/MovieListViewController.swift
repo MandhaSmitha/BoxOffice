@@ -32,9 +32,18 @@ class MovieListViewController: UIViewController {
     }
     
     func setupSearchController() {
-        searchController = UISearchController(searchResultsController: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let movieSearchViewController = storyboard.instantiateViewController(withIdentifier: "MovieSearchViewController") as! MovieSearchViewController
+        movieSearchViewController.delegate = self
+        searchController = UISearchController(searchResultsController: movieSearchViewController)
+        searchController.delegate = self
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
         searchController.searchBar.delegate = self
+        searchController.hidesNavigationBarDuringPresentation = true
+        definesPresentationContext = true
+        extendedLayoutIncludesOpaqueBars = true
         tableView.tableHeaderView = searchController.searchBar
     }
     
@@ -50,6 +59,11 @@ class MovieListViewController: UIViewController {
                 let action = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
                 alertController.addAction(action)
                 self?.present(alertController, animated: true, completion: nil)
+            }
+        }
+        viewModel.showRecentSearchesClosure = { [weak self] () in
+            DispatchQueue.main.async {
+                self?.searchController.searchResultsController?.view.isHidden = false
             }
         }
     }
@@ -85,6 +99,19 @@ extension MovieListViewController: UISearchBarDelegate {
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         viewModel.userSearchedForMovie(searchBar.text, isNewSearch: true)
+        searchController.isActive = false
+    }
+}
+
+extension MovieListViewController: UISearchControllerDelegate {
+    func presentSearchController(_ searchController: UISearchController) {
+        viewModel.userTappedSearchBar()
+    }
+}
+
+extension MovieListViewController: MovieSearchControllerDelegate {
+    func userTappedMovie(_ movieName: String) {
+        viewModel.userSearchedForMovie(movieName, isNewSearch: true)
         searchController.isActive = false
     }
 }

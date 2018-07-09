@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import CoreData
 
 struct MovieListViewModelConstants {
     static let genericTechnicalError = "Sorry, something went wrong. Please try again"
+    static let noResultsMessage = "Sorry, could not find movies with the name {movie_name}"
+    static let maxRecentSearchesRequired = 10
 }
 
 class MovieListViewModel: NSObject {
@@ -23,9 +26,16 @@ class MovieListViewModel: NSObject {
     }
     var reloadTableViewClosure: (()->())?
     var showAlertClosure: ((String)->())?
+    var showRecentSearchesClosure: (()->())?
 
     var numberOfCells: Int {
         return cellViewModels.count
+    }
+    
+    func userTappedSearchBar() {
+        if isRecentSearchDataAvailable() {
+            showRecentSearchesClosure?()
+        }
     }
     
     @objc func userSearchedForMovie(_ searchText: String? = nil, isNewSearch: Bool = false) {
@@ -82,11 +92,16 @@ class MovieListViewModel: NSObject {
     func handleMovieResponse(responseData: Data, isNewSearch: Bool) {
         do {
             guard let response = try JSONSerialization.jsonObject(with: responseData, options: [])
-                as? [String: Any], let movieListResponse = response["results"] as? [[String: Any]] else {
-                    showAlertClosure?(MovieListViewModelConstants.genericTechnicalError)
+                as? [String: Any], let movieListResponse = response["results"] as? [[String: Any]],
+                movieListResponse.count > 0 else {
+                    let message = MovieListViewModelConstants.noResultsMessage.replacingOccurrences(of: "{movie_name},", with: lastSearch)
+                    showAlertClosure?(message)
                     return
             }
             
+            if isNewSearch {
+                updateRecentSearchData()
+            }
             parseMovieResponse(response)
             parseMovieListResponse(movieListResponse)
             populateCellViewModels(movies: moviesModel.movies)
@@ -131,5 +146,53 @@ class MovieListViewModel: NSObject {
                                       nameText: movie.name ?? "",
                                       releaseDateText: movie.releaseDate ?? "--",
                                       fullOverviewText: movie.fullOverview ?? "")
+    }
+    func isRecentSearchDataAvailable() -> Bool {
+        let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        do {
+            let fetchRequest : NSFetchRequest<RecentMovieSearch> = RecentMovieSearch.fetchRequest()
+            do {
+                let recentSearchData = try viewContext.fetch(fetchRequest)
+                if recentSearchData.count > 0 {
+                    return true
+                }
+            } catch {
+                print("Unable to fetch recent search data")
+            }
+        }
+        return false
+    }
+    private func updateRecentSearchData() {
+        let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        do {
+            let fetchRequest : NSFetchRequest<RecentMovieSearch> = RecentMovieSearch.fetchRequest()
+            do {
+                fetchRequest.predicate = NSPredicate(format: "movieName=%@", lastSearch)
+                let recentSearchToUpdate = try viewContext.fetch(fetchRequest)
+                if recentSearchToUpdate.count > 0 {
+                    recentSearchToUpdate.first?.createdAt = Date()
+                } else {
+                    fetchRequest.predicate = nil
+                    let sort = NSSortDescriptor(key: #keyPath(RecentMovieSearch.createdAt), ascending: true)
+                    fetchRequest.sortDescriptors = [sort]
+                    let recentSearchData = try viewContext.fetch(fetchRequest)
+                    if recentSearchData.count >= MovieListViewModelConstants.maxRecentSearchesRequired, let oldestSearch = recentSearchData.first {
+                        viewContext.delete(oldestSearch)
+                    } else {
+                        let entity = NSEntityDescription.entity(forEntityName: "RecentMovieSearch", in: viewContext)!
+                        let recentSearch = NSManagedObject(entity: entity, insertInto: viewContext)
+                        recentSearch.setValue(lastSearch, forKey: "movieName")
+                        recentSearch.setValue(Date(), forKey: "createdAt")
+                    }
+                }
+                do {
+                    try viewContext.save()
+                } catch {
+                    print("Failed saving")
+                }
+            } catch {
+                print("Unable to fetch recent search data")
+            }
+        }
     }
 }
