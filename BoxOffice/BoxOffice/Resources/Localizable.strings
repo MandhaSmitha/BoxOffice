@@ -12,3 +12,4 @@
 /** MovieListCell strings */
 "MovieListCell_NameTitle_Text" = "Title : ";
 "MovieListCell_ReleaseDateTitle_Text" = "Release date : ";
+"MovieList_ErrorAlert_OkAction_Text" = "Ok";

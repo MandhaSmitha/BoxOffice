@@ -13,7 +13,8 @@ class MovieListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var searchController: UISearchController!
     lazy var viewModel: MovieListViewModel = {
-        return MovieListViewModel()
+        return MovieListViewModel(serviceHandler: MovieListServiceHandler(),
+                                  context: CoreDataUtility.shared.managedObjectContext)
     }()
     
     override func viewDidLoad() {
@@ -37,13 +38,10 @@ class MovieListViewController: UIViewController {
         movieSearchViewController.delegate = self
         searchController = UISearchController(searchResultsController: movieSearchViewController)
         searchController.delegate = self
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
         searchController.searchBar.delegate = self
+        searchController.dimsBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = true
-        definesPresentationContext = true
-        extendedLayoutIncludesOpaqueBars = true
         tableView.tableHeaderView = searchController.searchBar
     }
     
@@ -56,7 +54,8 @@ class MovieListViewController: UIViewController {
         viewModel.showAlertClosure = { [weak self] (message) in
             DispatchQueue.main.async {
                 let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-                let action = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+                let action = UIAlertAction(title: NSLocalizedString("MovieList_ErrorAlert_OkAction_Text", comment: "ok text"),
+                                           style: .cancel, handler: nil)
                 alertController.addAction(action)
                 self?.present(alertController, animated: true, completion: nil)
             }

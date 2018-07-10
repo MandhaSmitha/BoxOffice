@@ -14,13 +14,12 @@ protocol MovieSearchControllerDelegate {
 
 class MovieSearchViewController: UITableViewController {
     lazy var viewModel: MovieSearchViewModel = {
-        return MovieSearchViewModel()
+        return MovieSearchViewModel(context: CoreDataUtility.shared.managedObjectContext)
     }()
     var delegate: MovieSearchControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
         setupClosures()
     }
     
@@ -30,10 +29,6 @@ class MovieSearchViewController: UITableViewController {
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-    
-    func setupView() {
-        self.navigationItem.title = "Movie Search"
     }
     
     func setupClosures() {
@@ -53,5 +48,9 @@ class MovieSearchViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchTableviewCell", for: indexPath)
         cell.textLabel?.text = viewModel.getCellViewModel(at: indexPath.row).searchText
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.userTappedMovie(viewModel.getCellViewModel(at: indexPath.row).searchText)
     }
 }

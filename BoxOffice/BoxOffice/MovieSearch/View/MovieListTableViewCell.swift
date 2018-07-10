@@ -38,7 +38,7 @@ class MovieListTableViewCell: UITableViewCell {
         releaseDateLabel.text = viewModel?.releaseDateText
         overviewLabel.text = viewModel?.fullOverviewText
         if let posterURL = viewModel?.posterURL {
-            posterImageView.sd_setImage(with: URL(string: posterURL), placeholderImage: nil, options: .allowInvalidSSLCertificates, completed: nil)
+            posterImageView.sd_setImage(with: URL(string: posterURL), placeholderImage: nil, options: .progressiveDownload, completed: nil)
         }
     }
 }
